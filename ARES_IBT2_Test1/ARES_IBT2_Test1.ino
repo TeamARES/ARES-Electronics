@@ -40,17 +40,21 @@ void loop()
  
   // sensor value is in the range 0 to 1023
   // the lower half of it we use for reverse rotation; the upper half for forward rotation
-  if (sensorValue == 1){
+  int forwardPWM = 50;
+  if (sensorValue == 1){  //FORWARD
     // forward rotation
 //    int forwardPWM = (sensorValue - 512) / 2;
-    int forwardPWM = 50;
     analogWrite(RPWM_Output, forwardPWM);
     analogWrite(LPWM_Output, 0);
 
     analogWrite(RPWM_Output2, forwardPWM);
     analogWrite(LPWM_Output2, 0);
-  }else{
-    analogWrite(LPWM_Output, 0);
+  }
+  else if (sensorValue == 2){   //BACKWARD
+    analogWrite(LPWM_Output, forwardPWM);
     analogWrite(RPWM_Output, 0);
+
+    analogWrite(LPWM_Output2, forwardPWM);
+    analogWrite(RPWM_Output2, 0);
   }
 }
