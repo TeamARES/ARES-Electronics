@@ -2,17 +2,21 @@
 #include <Servo.h>  //Using servo library to control ESC
 
 #define SERIAL_PORT_SPEED 57600
-#define RC_NUM_CHANNELS  4
+#define RC_NUM_CHANNELS  5   //changing to 5
 
 #define RC_CH1  0
 #define RC_CH2  1
 #define RC_CH3  2
 #define RC_CH4  3
+#define RC_CH5  4                   //============>>>>> Adding index for 5th channel
 
 #define RC_CH1_INPUT  A0
 #define RC_CH2_INPUT  A1
 #define RC_CH3_INPUT  A2
 #define RC_CH4_INPUT  A3
+#define RC_CH5_INPUT  A4            //============>>>>> Adding pin for 5th channel
+
+int16_t PWM[RC_NUM_CHANNELS];
 
 uint16_t rc_values[RC_NUM_CHANNELS];
 uint32_t rc_start[RC_NUM_CHANNELS];
@@ -40,6 +44,14 @@ void calc_ch1() { calc_input(RC_CH1, RC_CH1_INPUT); }
 void calc_ch2() { calc_input(RC_CH2, RC_CH2_INPUT); }
 void calc_ch3() { calc_input(RC_CH3, RC_CH3_INPUT); }
 void calc_ch4() { calc_input(RC_CH4, RC_CH4_INPUT); }
+void calc_ch5() { calc_input(RC_CH5, RC_CH5_INPUT); }     //============>>>>> Adding function for 5th channel
+
+void setPWMInRange(){
+  for(int i = 0; i<RC_NUM_CHANNELS; i++){
+    if(PWM[i] < 0) PWM[i] = 0;
+    else if(PWM[i] > 255) PWM[i] = 255;
+  }
+}
 
 void setup() {
   Serial.begin(SERIAL_PORT_SPEED);
@@ -48,12 +60,13 @@ void setup() {
   pinMode(RC_CH2_INPUT, INPUT);
   pinMode(RC_CH3_INPUT, INPUT);
   pinMode(RC_CH4_INPUT, INPUT);
+  pinMode(RC_CH5_INPUT, INPUT);                         //============>>>>> Adding pin for 5th channel
 
   enableInterrupt(RC_CH1_INPUT, calc_ch1, CHANGE);
   enableInterrupt(RC_CH2_INPUT, calc_ch2, CHANGE);
   enableInterrupt(RC_CH3_INPUT, calc_ch3, CHANGE);
   enableInterrupt(RC_CH4_INPUT, calc_ch4, CHANGE);
-
+  enableInterrupt(RC_CH5_INPUT, calc_ch5, CHANGE);      //============>>>>> Adding Interrupts for 5th channel
   
 }
 
@@ -63,9 +76,21 @@ void loop() {
   Serial.print("CH1:"); Serial.print(rc_values[RC_CH1]); Serial.print("\t");
   Serial.print("CH2:"); Serial.print(rc_values[RC_CH2]); Serial.print("\t");
   Serial.print("CH3:"); Serial.print(rc_values[RC_CH3]); Serial.print("\t");
-  Serial.print("CH4:"); Serial.println(rc_values[RC_CH4]);Serial.print("\t");
+  Serial.print("CH4:"); Serial.print(rc_values[RC_CH4]); Serial.print("\t");
+  Serial.print("CH5:"); Serial.print(rc_values[RC_CH5]); Serial.print("\t");
 
-  channet4Output = map(rc_values[RC_CH3],1000,2000,1000,2000); 
+  PWM[RC_CH1] = map(rc_values[RC_CH1],1030,1990,0,255);
+  PWM[RC_CH2] = map(rc_values[RC_CH2],1000,1980,0,255);
+  PWM[RC_CH3] = map(rc_values[RC_CH3],990,1970,0,255);
+  PWM[RC_CH4] = map(rc_values[RC_CH4],990,1960,0,255);
+  PWM[RC_CH5] = map(rc_values[RC_CH5],980,1950,0,255);
+  setPWMInRange();
+  
+  Serial.print("P1:"); Serial.print(PWM[RC_CH1]); Serial.print("\t");
+  Serial.print("P2:"); Serial.print(PWM[RC_CH2]); Serial.print("\t");
+  Serial.print("P3:"); Serial.print(PWM[RC_CH3]); Serial.print("\t");
+  Serial.print("P4:"); Serial.print(PWM[RC_CH4]);Serial.print("\t");
+  Serial.print("P5:"); Serial.println(PWM[RC_CH5]);Serial.print("\t");
   
   delay(100);
 }
