@@ -22,8 +22,8 @@ int LPWM_Output = 8; // Arduino PWM output pin 2; connect to IBT-2 pin 2 (LPWM)
 //int LPWM_Output2 = 3; // Arduino PWM output pin 3; connect to IBT-2 pin 2 (LPWM)
 //
 ////Right Front
-//int RPWM_Output3 = 9; // Arduino PWM output pin 9; connect to IBT-2 pin 1 (RPWM)
-//int LPWM_Output3 = 5; // Arduino PWM output pin 5; connect to IBT-2 pin 2 (LPWM)
+int RPWM_Output3 = 9; // Arduino PWM output pin 9; connect to IBT-2 pin 1 (RPWM)
+int LPWM_Output3 = 5; // Arduino PWM output pin 5; connect to IBT-2 pin 2 (LPWM)
 //
 ////Right Back
 //int RPWM_Output4 = 8; // Arduino PWM output pin 5; connect to IBT-2 pin 1 (RPWM)
@@ -40,8 +40,8 @@ void setup()
 //  pinMode(RPWM_Output2, OUTPUT);
 //  pinMode(LPWM_Output2, OUTPUT);
 //
-//  pinMode(RPWM_Output3, OUTPUT);
-//  pinMode(LPWM_Output3, OUTPUT);
+  pinMode(RPWM_Output3, OUTPUT);
+  pinMode(LPWM_Output3, OUTPUT);
 //
 //  pinMode(RPWM_Output4, OUTPUT);
 //  pinMode(LPWM_Output4, OUTPUT);
@@ -68,8 +68,8 @@ void loop()
 //    analogWrite(RPWM_Output2, forwardPWM);
 //    analogWrite(LPWM_Output2, 0);
 //
-//    analogWrite(RPWM_Output3, forwardPWM);
-//    analogWrite(LPWM_Output3, 0);
+    analogWrite(RPWM_Output3, forwardPWM);
+    analogWrite(LPWM_Output3, 0);
 //
 //    analogWrite(RPWM_Output4, forwardPWM);
 //    analogWrite(LPWM_Output4, 0);
@@ -84,8 +84,8 @@ void loop()
 //    analogWrite(LPWM_Output2, forwardPWM);
 //    analogWrite(RPWM_Output2, 0);
 //
-//    analogWrite(LPWM_Output3, forwardPWM);
-//    analogWrite(RPWM_Output3, 0);
+    analogWrite(LPWM_Output3, forwardPWM);
+    analogWrite(RPWM_Output3, 0);
 //
 //    analogWrite(LPWM_Output4, forwardPWM);
 //    analogWrite(RPWM_Output4, 0);

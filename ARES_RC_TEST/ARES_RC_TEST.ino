@@ -48,7 +48,7 @@ void calc_ch5() { calc_input(RC_CH5, RC_CH5_INPUT); }     //============>>>>> Ad
 
 void setPWMInRange(){
   for(int i = 0; i<RC_NUM_CHANNELS; i++){
-    if(PWM[i] < 0) PWM[i] = 0;
+    if(PWM[i] < -255) PWM[i] = -255;
     else if(PWM[i] > 255) PWM[i] = 255;
   }
 }
@@ -79,11 +79,11 @@ void loop() {
   Serial.print("CH4:"); Serial.print(rc_values[RC_CH4]); Serial.print("\t");
   Serial.print("CH5:"); Serial.print(rc_values[RC_CH5]); Serial.print("\t");
 
-  PWM[RC_CH1] = map(rc_values[RC_CH1],1030,1990,0,255);
-  PWM[RC_CH2] = map(rc_values[RC_CH2],1000,1980,0,255);
-  PWM[RC_CH3] = map(rc_values[RC_CH3],990,1970,0,255);
-  PWM[RC_CH4] = map(rc_values[RC_CH4],990,1960,0,255);
-  PWM[RC_CH5] = map(rc_values[RC_CH5],980,1950,0,255);
+  PWM[RC_CH1] = map(rc_values[RC_CH1],1030,1990,-255,255);
+  PWM[RC_CH2] = map(rc_values[RC_CH2],1000,1980,-255,255);
+  PWM[RC_CH3] = map(rc_values[RC_CH3],990,1970,-255,255);
+  PWM[RC_CH4] = map(rc_values[RC_CH4],990,1960,-255,255);
+  PWM[RC_CH5] = map(rc_values[RC_CH5],980,1950,-255,255);
   setPWMInRange();
   
   Serial.print("P1:"); Serial.print(PWM[RC_CH1]); Serial.print("\t");
