@@ -107,47 +107,8 @@ void stopDrive(){
   analogWrite(RPWM_Output3, 0);
   analogWrite(LPWM_Output3, 0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void setup() {
-  Serial.begin(SERIAL_PORT_SPEED);
-  
-  pinMode(RC_CH1_INPUT, INPUT);
-  pinMode(RC_CH2_INPUT, INPUT);
-  pinMode(RC_CH3_INPUT, INPUT);
-  pinMode(RC_CH4_INPUT, INPUT);
-  pinMode(RC_CH5_INPUT, INPUT);                         //============>>>>> Adding pin for 5th channel
-
-  enableInterrupt(RC_CH1_INPUT, calc_ch1, CHANGE);
-  enableInterrupt(RC_CH2_INPUT, calc_ch2, CHANGE);
-  enableInterrupt(RC_CH3_INPUT, calc_ch3, CHANGE);
-  enableInterrupt(RC_CH4_INPUT, calc_ch4, CHANGE);
-  enableInterrupt(RC_CH5_INPUT, calc_ch5, CHANGE);      //============>>>>> Adding Interrupts for 5th channel
-  
-}
-
-void loop() {
-  rc_read_values();
-
-  Serial.print("CH1:"); Serial.print(rc_values[RC_CH1]); Serial.print("\t");   //FOR LEFT RIGHT
-  Serial.print("CH2:"); Serial.print(rc_values[RC_CH2]); Serial.print("\t");   //FOR FRONT BACK
-  Serial.print("CH3:"); Serial.print(rc_values[RC_CH3]); Serial.print("\t");
-  Serial.print("CH4:"); Serial.print(rc_values[RC_CH4]); Serial.print("\t");
-  Serial.print("CH5:"); Serial.print(rc_values[RC_CH5]); Serial.print("\t");
-
-  PWM[RC_CH1] = map(rc_values[RC_CH1],1030,1990,-255,255);
-  PWM[RC_CH2] = map(rc_values[RC_CH2],1000,1980,-255,255);
-  PWM[RC_CH3] = map(rc_values[RC_CH3],990,1970,-255,255);
-  PWM[RC_CH4] = map(rc_values[RC_CH4],990,1960,-255,255);
-  PWM[RC_CH5] = map(rc_values[RC_CH5],980,1950,-255,255);
-  setPWMInRange();
-  
-  Serial.print("P1:"); Serial.print(PWM[RC_CH1]); Serial.print("\t");
-  Serial.print("P2:"); Serial.print(PWM[RC_CH2]); Serial.print("\t");   
-  Serial.print("P3:"); Serial.print(PWM[RC_CH3]); Serial.print("\t");
-  Serial.print("P4:"); Serial.print(PWM[RC_CH4]);Serial.print("\t");
-  Serial.print("P5:"); Serial.println(PWM[RC_CH5]);Serial.print("\t");
-
+void drive(){
   if(PWM[RC_CH1] > 50 || PWM[RC_CH1] < -50){
     if(PWM[RC_CH1] >= 50){
       Serial.print("right");
@@ -170,7 +131,51 @@ void loop() {
       stopDrive();
     }
   }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void setup() {
+  Serial.begin(SERIAL_PORT_SPEED);
   
+  pinMode(RC_CH1_INPUT, INPUT);
+  pinMode(RC_CH2_INPUT, INPUT);
+  pinMode(RC_CH3_INPUT, INPUT);
+  pinMode(RC_CH4_INPUT, INPUT);
+  pinMode(RC_CH5_INPUT, INPUT);                         //============>>>>> Adding pin for 5th channel
+
+  enableInterrupt(RC_CH1_INPUT, calc_ch1, CHANGE);
+  enableInterrupt(RC_CH2_INPUT, calc_ch2, CHANGE);
+  enableInterrupt(RC_CH3_INPUT, calc_ch3, CHANGE);
+  enableInterrupt(RC_CH4_INPUT, calc_ch4, CHANGE);
+  enableInterrupt(RC_CH5_INPUT, calc_ch5, CHANGE);      //============>>>>> Adding Interrupts for 5th channel
+
+  void setupIBT2Pins()
+}
+
+void loop() {
+  rc_read_values();
+
+  Serial.print("CH1:"); Serial.print(rc_values[RC_CH1]); Serial.print("\t");   //FOR LEFT RIGHT
+  Serial.print("CH2:"); Serial.print(rc_values[RC_CH2]); Serial.print("\t");   //FOR FRONT BACK
+  //Rest of channels are unused!
+  Serial.print("CH3:"); Serial.print(rc_values[RC_CH3]); Serial.print("\t");
+  Serial.print("CH4:"); Serial.print(rc_values[RC_CH4]); Serial.print("\t");
+  Serial.print("CH5:"); Serial.print(rc_values[RC_CH5]); Serial.print("\t");
+
+  PWM[RC_CH1] = map(rc_values[RC_CH1],1030,1990,-255,255);
+  PWM[RC_CH2] = map(rc_values[RC_CH2],1000,1980,-255,255);
+  PWM[RC_CH3] = map(rc_values[RC_CH3],990,1970,-255,255);
+  PWM[RC_CH4] = map(rc_values[RC_CH4],990,1960,-255,255);
+  PWM[RC_CH5] = map(rc_values[RC_CH5],980,1950,-255,255);
+  setPWMInRange();
+  
+  Serial.print("P1:"); Serial.print(PWM[RC_CH1]); Serial.print("\t");
+  Serial.print("P2:"); Serial.print(PWM[RC_CH2]); Serial.print("\t");   
+  Serial.print("P3:"); Serial.print(PWM[RC_CH3]); Serial.print("\t");
+  Serial.print("P4:"); Serial.print(PWM[RC_CH4]);Serial.print("\t");
+  Serial.print("P5:"); Serial.println(PWM[RC_CH5]);Serial.print("\t");
+
+  drive();
   
   delay(100);
 }
