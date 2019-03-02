@@ -21,8 +21,9 @@ void setup() {
 }
 
 void loop() {
-  //Set motorSpeedA and MotorSpeedB from RC
+  //Set motorSpeedA and MotorSpeedB from RC: 
 
+   //MotorSpeedA and B varies from -255 to 255. Therefore -ve means reverse and +ve means forward
    if(motorSpeedA >= 0){
       //Forward Motion
       digitalWrite(in1, LOW);
@@ -35,4 +36,15 @@ void loop() {
       analogWrite(enA, -1*(motorSpeedA));
    }
 
+   if(motorSpeedB >= 0){
+      //Forward Motion
+      digitalWrite(in3, LOW);
+      digitalWrite(in4, HIGH);
+      analogWrite(enB, motorSpeedA);
+   }else{
+      //Backward Motion
+      digitalWrite(in3, HIGH);
+      digitalWrite(in4, LOW);
+      analogWrite(enB, -1*(motorSpeedA));
+   }
 }
