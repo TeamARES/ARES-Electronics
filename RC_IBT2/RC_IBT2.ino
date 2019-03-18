@@ -108,25 +108,25 @@ void stopDrive(){
   analogWrite(LPWM_Output3, 0);
 }
 
-void drive(){
-  if(PWM[RC_CH1] > 50 || PWM[RC_CH1] < -50){
-    if(PWM[RC_CH1] >= 50){
+void drive(int forBackWardChannel, int leftRightChannel){
+  if(PWM[leftRightChannel] > 50 || PWM[leftRightChannel] < -50){
+    if(PWM[leftRightChannel] >= 50){
       Serial.print("right");
-      driveLeft(PWM[RC_CH1]);
-    }else if(PWM[RC_CH1] < -50){
+      driveLeft(PWM[leftRightChannel]-50);
+    }else if(PWM[leftRightChannel] < -50){
       Serial.print("left");
-      driveRight((-1)*PWM[RC_CH1]);
+      driveRight(((-1)*PWM[leftRightChannel]) - 50);
     }else{
       stopDrive();
     }
   }
   else{
-    if(PWM[RC_CH2] >= 10){
+    if(PWM[forBackWardChannel] >= 10){
       Serial.print("forward");
-      driveForward(PWM[RC_CH2]);
-    }else if(PWM[RC_CH2] < -10){
+      driveForward(PWM[forBackWardChannel]-10);
+    }else if(PWM[forBackWardChannel] < -10){
       Serial.print("backward");
-      driveBackward((-1)*PWM[RC_CH2]);
+      driveBackward(((-1)*PWM[forBackWardChannel])-10);
     }else{
       stopDrive();
     }
@@ -149,7 +149,7 @@ void setup() {
   enableInterrupt(RC_CH4_INPUT, calc_ch4, CHANGE);
   enableInterrupt(RC_CH5_INPUT, calc_ch5, CHANGE);      //============>>>>> Adding Interrupts for 5th channel
 
-  void setupIBT2Pins()
+  setupIBT2Pins();
 }
 
 void loop() {
@@ -175,7 +175,7 @@ void loop() {
   Serial.print("P4:"); Serial.print(PWM[RC_CH4]);Serial.print("\t");
   Serial.print("P5:"); Serial.println(PWM[RC_CH5]);Serial.print("\t");
 
-  drive();
+  drive(RC_CH2,RC_CH4);
   
   delay(100);
 }
