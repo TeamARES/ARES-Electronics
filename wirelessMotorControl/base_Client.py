@@ -10,7 +10,7 @@ import serial
 
 ###################### SOCKET OBJECT AND VARIABLES ###################################################
 s = socket.socket()
-host = '162.168.10.105'  #IP Address of the Raspberry pi
+host = '192.168.10.101'  #IP Address of the Raspberry pi
 port = 9999            #Must be same as that in server.py
 
 #In client.py we use another way to bind host and port together by using connect function()
@@ -18,8 +18,8 @@ s.connect((host, port))
 ###########################SERIAL OBJECT ##############################################
 serialPortMac = '/dev/tty.usbmodem14101' #FOR MACBOOK
 serialPortWin = '/dev/ttyUSB0'           #FOR WINDOWS
-serialPortUnuntu = '/dev/ttyACM1'        #FOR UBUNTU
-ser = serial.Serial(serialPortMac, 9600,timeout=0.005)
+serialPortUbuntu = '/dev/ttyACM1'        #FOR UBUNTU
+ser = serial.Serial(serialPortUbuntu, 9600,timeout=0.005)
 
 
 
