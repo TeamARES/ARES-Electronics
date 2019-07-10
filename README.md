@@ -10,4 +10,10 @@ Electronics team of ARES is responsible for the following tasks:
  MOKSHA_CODES : These have codes that were used in Moksha demonstration
  
  Summer-2019 Codes : These have codes we are working/testing during summers
+
+ In the Wireless communication: 
+ * CPE (rover) : AP router
+ * CPE (base)  : Client
+ Fsi6 -> Arduino -> Laptop -> CPE (base) ------> 
+ CPE(rover) -> (wireless) -> raspberry pi -> Arduino Mega                                 
  
