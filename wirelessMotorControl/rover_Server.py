@@ -4,9 +4,14 @@
 
 #importing socket so that we can connect two computer
 import socket
-#imporing sys - used to implement command line and terminal commands into a python file.
-#import sys
+#importing PySerial and time
+import serial
+import time
 
+###################ARDUINO SERIAL OBJECT#################################################
+serialPortMac = '/dev/tty.usbmodem14101'
+serialPortPi = '/dev/ttyACM0'
+arduinoSerial = serial.Serial(serialPortMac, 9600, timeout = 1)
 
 ######################################################################################################################
 ########## Function to Create a Socket ( socket connect two computers)
@@ -78,7 +83,9 @@ def read_commands(conn):
 ###########  # Process Data from raspberrypi to Arduino
 ######################################################################################################################
 def processDataToArduino(data):
-                  
+    arduinoSerial.write(str(data).encode())
+
+    
 ######################################################################################################################
 ###########  # MAIN
 ######################################################################################################################

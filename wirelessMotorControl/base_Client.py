@@ -29,7 +29,11 @@ while True:
     #Data comes in format b'.........'
     if(len(serialData) > 3):
         print(serialData + "\n")          #Recieved data successfully from Serial
-    
+        #Making It short
+        start = serialData.index('\'')
+        end = serialData.index('\'',start+1)
+        serialData = serialData[start+1:end]
+        print(serialData)
         # Sendng this data from socket to the raspberry pi
         s.send(str.encode(serialData))
     
