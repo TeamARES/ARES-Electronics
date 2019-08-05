@@ -3,7 +3,7 @@
 #include <EnableInterrupt.h>
 #include <Servo.h>  //Using servo library to control ESC
 
-#define SERIAL_PORT_SPEED 57600
+#define SERIAL_PORT_SPEED 9600
 #define RC_NUM_CHANNELS  5   //changing to 5
 
 #define RC_CH1  0
