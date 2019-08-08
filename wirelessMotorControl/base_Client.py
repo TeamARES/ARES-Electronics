@@ -6,11 +6,12 @@ import socket
 #importing time
 import time
 #importing Serial to take data from serial port
-import serial
+
 
 ###################### SOCKET OBJECT AND VARIABLES ###################################################
 s = socket.socket()
-host = '192.168.10.101'  #IP Address of the Raspberry pi
+host =  #IP
+    of the Raspberry pi
 port = 9999            #Must be same as that in server.py
 
 #In client.py we use another way to bind host and port together by using connect function()

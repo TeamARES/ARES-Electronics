@@ -13,6 +13,8 @@ serialPortMac = '/dev/tty.usbmodem14101'
 serialPortPi = '/dev/ttyACM0'
 arduinoSerial = serial.Serial(serialPortMac, 9600, timeout = 1)
 
+
+
 ######################################################################################################################
 ########## Function to Create a Socket ( socket connect two computers)
 ######################################################################################################################
@@ -76,6 +78,12 @@ def read_commands(conn):
         if(len(dataFromBase) > 3):
             send_commands(conn,'1')
             processDataToArduino(dataFromBase)
+        
+            while arduinoSerial.inWaiting() < 1:
+                pass
+            serialData = str(arduinoSerial.readline())
+            if(len(serialData) > 2):
+                print(makeDataWhatArduinoSent(serialData))
         else:
             send_commands(conn,'0')
 
@@ -85,6 +93,11 @@ def read_commands(conn):
 def processDataToArduino(data):
     arduinoSerial.write(str(data).encode())
 
+######################################################################################################################
+###########  # Remove b'' and\r\n from the string
+######################################################################################################################
+def makeDataWhatArduinoSent(data):
+    return data[2:len(data)-5]
     
 ######################################################################################################################
 ###########  # MAIN
@@ -93,7 +106,12 @@ def main():
     create_socket()
     bind_socket()
     socket_accept()
-
+############################################################
+#Sending fake data
+    processDataToArduino('1,1001,1002,1003,1004,1005,1006');
+    time.sleep(2)
+    processDataToArduino('0,0,0,0,0,0,0');
+########################################
 
 main()
 

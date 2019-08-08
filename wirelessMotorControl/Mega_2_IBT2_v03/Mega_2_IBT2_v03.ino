@@ -1,6 +1,8 @@
-#define RC_NUM_CHANNELS  6
-int PWM[RC_NUM_CHANNELS];
-//Following are indexes are for above Array:
+String data = "";
+String serialData = "";
+int motor;
+int PWM[6];
+
 #define RC_CH1  0
 #define RC_CH2  1
 #define RC_CH3  2
@@ -8,22 +10,20 @@ int PWM[RC_NUM_CHANNELS];
 #define RC_CH5  4 
 #define RC_CH6  5
 
-int motorOrARM = 0;  //0 FOR MOTOR AND 1 FOR ARM
-
 ////////// VARIABLES FOR IBT2 //////////////////////
 //Left front
-#define RPWM_PIN_FRONT_LEFT 8 // Arduino PWM output pin 6; connect to IBT-2 pin 1 (RPWM)
-#define LPWM_PIN_FRONT_LEFT 9 // Arduino PWM output pin 2; connect to IBT-2 pin 2 (LPWM)
+#define RPWM_PIN_FRONT_LEFT 12 // Arduino PWM output pin 6; connect to IBT-2 pin 1 (RPWM)
+#define LPWM_PIN_FRONT_LEFT 13 // Arduino PWM output pin 2; connect to IBT-2 pin 2 (LPWM)
 //Right Front
-#define RPWM_PIN_FRONT_RIGHT 12 // Arduino PWM output pin 9; connect to IBT-2 pin 1 (RPWM)
-#define LPWM_PIN_FRONT_RIGHT 13 // Arduino PWM output pin 5; connect to IBT-2 pin 2 (LPWM)
+#define RPWM_PIN_FRONT_RIGHT 11 // Arduino PWM output pin 9; connect to IBT-2 pin 1 (RPWM)
+#define LPWM_PIN_FRONT_RIGHT 10 // Arduino PWM output pin 5; connect to IBT-2 pin 2 (LPWM)
 
 //Left Rear
-#define RPWM_PIN_REAR_LEFT 10 // Arduino PWM output pin 6; connect to IBT-2 pin 1 (RPWM)
-#define LPWM_PIN_REAR_LEFT 11 // Arduino PWM output pin 2; connect to IBT-2 pin 2 (LPWM)
+#define RPWM_PIN_REAR_LEFT 12 // Arduino PWM output pin 6; connect to IBT-2 pin 1 (RPWM)
+#define LPWM_PIN_REAR_LEFT 13 // Arduino PWM output pin 2; connect to IBT-2 pin 2 (LPWM)
 //Right Rear
-#define RPWM_PIN_REAR_RIGHT 44 // Arduino PWM output pin 9; connect to IBT-2 pin 1 (RPWM)
-#define LPWM_PIN_REAR_RIGHT 45 // Arduino PWM output pin 5; connect to IBT-2 pin 2 (LPWM)
+#define RPWM_PIN_REAR_RIGHT 8 // Arduino PWM output pin 9; connect to IBT-2 pin 1 (RPWM)
+#define LPWM_PIN_REAR_RIGHT 9// Arduino PWM output pin 5; connect to IBT-2 pin 2 (LPWM)
 
 ///////////////// Direction of DRIVING //////////////////////////////////////////////
 #define FORWARD 0
@@ -36,118 +36,81 @@ int driveDirFB = -1;  //This is direction if rover is moving FORWARD or BACKWARD
 int driveDirRL = -1;  //This is direction if rover is moving RIGHT or LEFT
 
 
-////////////////////////////////////////////////////////////////////////////////
-///////////////////SET UP and LOOP///////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////// SETUP //////////////////////////////
+////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(9600);
-  setupIBT2Pins();
-
-  
+  motor = 0;
+  for(int i=0; i<6; i++){
+    PWM[i] = 0;
+  }
 }
 
-
-
+////////////////////////////////////////////////////////////
+////////////////////////////// LOOP //////////////////////////////
+////////////////////////////////////////////////////////////
 void loop() {
- readSerialData();
-}
-
-
-//Data fromat = B’0,10,20,30,0,50,60’
-void readSerialData(){
-    String data = "";
-    while(Serial.available() == 0){
+  //Loop: Subsection 1:
+  ///////////This part read from Serial monitor///////////////////
+  ///////////and store data in required variables///////////////////
+  while(Serial.available() == 0){
       //Do nothing
-    }
-    data = Serial.readString();
-    
-    Serial.println(data.indexOf(','));
-    Serial.println(data.charAt(1));
-    Serial.println(data.charAt(2));
-    Serial.println(data.charAt(3));
-    Serial.println(data.charAt(4));
-    Serial.println(data.charAt(5));
-    Serial.println(data.charAt(6));
-    Serial.println(data.charAt(7));
-    
-    Serial.println(data.length());
+  }
+  serialData = Serial.readString();
 
-//    data = data.substring(4,data.length()-4);
-    Serial.println(data);
-    Serial.println("-------");
-    String text = data;
-    Serial.println(text);
-    Serial.println("-------");
-    Serial.println(text.charAt(0));
-    Serial.println(text.charAt(1));
-    Serial.println(text.charAt(3));
-    Serial.println(text.charAt(4));
-    Serial.println(text.charAt(5));
-    Serial.println(text.charAt(6));
-//    Serial.println(data.charAt(7));
-    
-    bool stored = storeDataInVariables(data);
-//    Serial.println("WE GET FALSE : "+stored);
+  int posl = 0;
+  int posr = 0;
+  
+  posr = serialData.indexOf(',',posl);
+  data = serialData.substring(posl,posr);
+  motor = data.toInt();
 
-    
-    
-//    Serial.print(String(motorOrARM)+",");
-//    for(int i=0; i<6;i++){
-//      Serial.print(String(PWM[i])+",");
-//    }
-//    Serial.println(" ");
- 
+  posl = posr + 1;
+  posr = serialData.indexOf(',',posl);
+  data = serialData.substring(posl,posr);
+  PWM[0] = data.toInt();
 
-//  Serial.flush();
-//  Serial.println("FLUSHIN DATA");
+  posl = posr + 1;
+  posr = serialData.indexOf(',',posl);
+  data = serialData.substring(posl,posr);
+  PWM[1] = data.toInt();
+
+  posl = posr + 1;
+  posr = serialData.indexOf(',',posl);
+  data = serialData.substring(posl,posr);
+  PWM[2] = data.toInt();
+
+  posl = posr + 1;
+  posr = serialData.indexOf(',',posl);
+  data = serialData.substring(posl,posr);
+  PWM[3] = data.toInt();
+  
+  posl = posr + 1;
+  posr = serialData.indexOf(',',posl);
+  data = serialData.substring(posl,posr);
+  PWM[4] = data.toInt();
+  
+  posl = posr + 1;
+  data = serialData.substring(posl);
+  PWM[5] = data.toInt();
+  
+  
+  if(motor == 1){
+    Serial.println("P1:"+String(motor)+":"+String(PWM[0])+":"+String(PWM[1])+":"+String(PWM[2])+":"+String(PWM[3])+":"+String(PWM[4])+":"+String(PWM[5]));
+  }else{
+    Serial.println("A1:"+String(motor)+":"+String(PWM[0])+":"+String(PWM[1])+":"+String(PWM[2])+":"+String(PWM[3])+":"+String(PWM[4])+":"+String(PWM[5]));
+  }
+
+  //Loop: Subsection 1 ENDS:///////////////////////////////////////////////////
+
+  
   
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////// HELPING FUNCTIONS //////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-/*
- * Function : storeDataInVariables
- * Role     : To store variables in PWM[] and motorOrARM
- */
-bool storeDataInVariables(String text){
-  String text1 = text;
-  Serial.println(text.indexOf(','));
-  Serial.println(text);
-  
-  int posl = 0;
-  Serial.println(posl);
-  Serial.println(text.charAt(1));
-  int posr = text.indexOf(',',posl);
-  
-  Serial.println("\n\n POSR = "+posr);
-  
-  //We will check if posr exist or not.It is does not exist then nothing was saved in backup files
-  if(posr < 0){
-    return false;
-  }
-  
-  String data = text.substring(posl,posr);
-  motorOrARM = data.toInt();
-
-  Serial.println("\nmotorOrARM = "+motorOrARM);
-  
-  //Now storing values in PWM[RC_NUM_CHANNELS]
-  for(int i=RC_CH1; i<=RC_CH5;i++){
-    //Second Field is ground altitude from bmp:
-    posl = posr+1;
-    posr = text.indexOf(",",posl);
-    if(posr == -1) return false;
-
-    data = text.substring(posl,posr);
-    PWM[i] = data.toInt();
-  }
-  
-  int lastPos = text.lastIndexOf(",");
-  data = text.substring(lastPos+1,text.length());
-  PWM[RC_CH6] = data.toInt();
-
-  return true;
-}
 
 /*
  * Function : setupIBT2Pins
@@ -155,6 +118,7 @@ bool storeDataInVariables(String text){
  * 
  */
 void setupIBT2Pins(){
+  Serial.println("========== SETTING IBT2 PINS =============");
   pinMode(RPWM_PIN_FRONT_LEFT, OUTPUT);
   pinMode(LPWM_PIN_FRONT_LEFT, OUTPUT);
   
@@ -166,13 +130,27 @@ void setupIBT2Pins(){
   
   pinMode(RPWM_PIN_REAR_RIGHT, OUTPUT);
   pinMode(LPWM_PIN_REAR_RIGHT, OUTPUT);
+
+  analogWrite(RPWM_PIN_FRONT_LEFT, 0);
+  analogWrite(LPWM_PIN_FRONT_LEFT, 0);
+  
+  analogWrite(RPWM_PIN_FRONT_RIGHT, 0);
+  analogWrite(LPWM_PIN_FRONT_RIGHT, 0);
+
+  analogWrite(RPWM_PIN_REAR_LEFT, 0);
+  analogWrite(LPWM_PIN_REAR_LEFT, 0);
+  
+  analogWrite(RPWM_PIN_REAR_RIGHT, 0);
+  analogWrite(LPWM_PIN_REAR_RIGHT, 0);
+  
+  Serial.println("========== SETTING OVER =============");
 }
 
-/*
- * Function : DRINVING FUNCTIONS
- * Role     : FRONT, BACK, LEFT, RIGHT Functions for MEGA
- */
 void driveForward(int pwmSignal1, int pwmSignal2, int pwmSignal3, int pwmSignal4){
+  Serial.println(String(RPWM_PIN_FRONT_LEFT)+" : "+pwmSignal1);
+  Serial.println(String(RPWM_PIN_FRONT_RIGHT)+" : "+pwmSignal2);
+  Serial.println(String(RPWM_PIN_REAR_LEFT)+" : "+pwmSignal3);
+  Serial.println(String(RPWM_PIN_REAR_RIGHT)+" : "+pwmSignal4);
   
   analogWrite(RPWM_PIN_FRONT_LEFT, pwmSignal1);
   analogWrite(LPWM_PIN_FRONT_LEFT, 0);
@@ -284,6 +262,7 @@ void drive2(int forBackWardChannel, int leftRightChannel){
       if (motorSpeedRight > 255) {
         motorSpeedRight = 255;
       }
+      
     }
 
     
@@ -291,7 +270,7 @@ void drive2(int forBackWardChannel, int leftRightChannel){
 
   if(driveDir == 0){
     Serial.print("Forward: ");Serial.print(motorSpeedLeft);Serial.print(" ");Serial.println(motorSpeedRight);
-    
+ 
     driveForward(motorSpeedLeft,motorSpeedRight,motorSpeedLeft ,motorSpeedRight);
   
   }
